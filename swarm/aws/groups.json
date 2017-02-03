@@ -18,16 +18,16 @@ AWS specific - This is where we introspect the environment and export the values
 {{ $iam := include "http://169.254.169.254/latest/meta-data/iam/info" | from_json }} {{/* parsed as object */}}
 
 {{/* export variables so that they are visible in included templates */}}
-{{ global "availabilityZone" $availabilityZone }}
-{{ global "amiID" $amiID }}
-{{ global "instanceType" $instanceType }}
-{{ global "keyName" $keyName }}
-{{ global "mac" $mac }}
-{{ global "securityGroups" $securityGroups }}
-{{ global "$securityGroupIDs" $securityGroupIDs }}
-{{ global "subnetID" $subnetID }}
-{{ global "vpcID" $vpcID }}
-{{ global "iam" $iam }} {{/* an object */}}
+{{ global "/local/availabilityZone" $availabilityZone }}
+{{ global "/local/amiID" $amiID }}
+{{ global "/local/instanceType" $instanceType }}
+{{ global "/local/keyName" $keyName }}
+{{ global "/local/mac" $mac }}
+{{ global "/local/securityGroups" $securityGroups }}
+{{ global "/local/securityGroupIDs" $securityGroupIDs }}
+{{ global "/local/subnetID" $subnetID }}
+{{ global "/local/vpcID" $vpcID }}
+{{ global "/local/iam" $iam }} {{/* an object */}}
 
 
 {

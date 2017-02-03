@@ -7,36 +7,36 @@ Instance plugin config for managers on AWS
     "Plugin": "instance-aws",
     "Properties": {
         "Tags": {
-            "infrakit.clusterName": "{{ var "clusterName" }}",
+            "infrakit.clusterName": "{{ ref "/cluster/name" }}",
             "infrakit.role" : "managers"
         },
         "RunInstancesInput": {
             "BlockDeviceMappings": null,
             "EbsOptimized": null,
             "IamInstanceProfile": {
-                "Arn": "{{ (var "iam").InstanceProfileArn }}",
+                "Arn": "{{ (ref "/local/iam").InstanceProfileArn }}",
                 "Name": null
             },
-            "ImageId": "{{ var "amiID" }}",
-            "InstanceType": "{{ var "instanceType" }}",
-            "KeyName": "{{ var "keyName" }}",
+            "ImageId": "{{ ref "/local/amiID" }}",
+            "InstanceType": "{{ ref "/local/instanceType" }}",
+            "KeyName": "{{ ref "/local/keyName" }}",
             "NetworkInterfaces": [
                 {
                     "AssociatePublicIpAddress": true,
                     "DeleteOnTermination": true,
                     "DeviceIndex": 0,
                     "Groups": [
-                        "{{ var "securityGroupIDs" }}"
+                        "{{ ref "/local/securityGroupIDs" }}"
                     ],
                     "NetworkInterfaceId": null,
                     "PrivateIpAddress": null,  {{/* will be set by plugin if logical id is known */}}
                     "PrivateIpAddresses": null,
                     "SecondaryPrivateIpAddressCount": null,
-                    "SubnetId": "{{ var "subnetID" }}"
+                    "SubnetId": "{{ ref "/local/subnetID" }}"
                 }
             ],
             "Placement": {
-                "AvailabilityZone": "{{ var "availabilityZone" }}",
+                "AvailabilityZone": "{{ ref "/local/availabilityZone" }}",
                 "Tenancy": null
             },
             "PrivateIpAddress": null,

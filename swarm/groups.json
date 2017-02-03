@@ -16,6 +16,8 @@ the instances it manages reside.
 {{ $workerInit := "https://chungers.github.io/infrakit-demos/swarm/worker-init.sh" }}
 {{ $workerSize := 3 }}
 
+{{ global "/cluster/name" $clusterName }}
+
 {{ $myGroups := include "aws/groups.json" | from_json }}
 
 {{/* This is necessary to make parameters visible in all the included templates via the 'include' function. */}}
