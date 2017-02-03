@@ -1,4 +1,14 @@
-{{/* Variables */}}
+{{/*
+
+Infrakit Groups Config
+
+This is a template JSON for managing two groups of instances - managers and workers - on AWS.
+To keep things simple, we use the metadata api on AWS to determine subnets and vpc ids.
+
+This is to support the use case where infrakit is running *inside* the cloud environment where
+the instances it manages reside.
+
+ */}}
 {{ $clusterName := "super30" }}
 
 {{ $availabilityZone := include "http://169.254.169.254/latest/meta-data/placement/availability-zone" }}
@@ -44,51 +54,7 @@
                         }
                     }
                 },
-                "Instance": {
-                    "Plugin": "instance-aws",
-                    "Properties": {
-                        "Tags": {
-                            "cluster-name": "{{ $clusterName }}",
-                            "role" : "managers"
-                        },
-                        "RunInstancesInput": {
-                            "BlockDeviceMappings": null,
-                            "EbsOptimized": null,
-                            "IamInstanceProfile": {
-                                "Arn": "{{ $iam.InstanceProfileArn }}",
-                                "Name": null
-                            },
-                            "ImageId": "{{ $amiID }}",
-                            "InstanceType": "{{ $instanceType }}",
-                            "KeyName": "{{ $keyName }}",
-                            "NetworkInterfaces": [
-                                {
-                                    "AssociatePublicIpAddress": true,
-                                    "DeleteOnTermination": true,
-                                    "DeviceIndex": 0,
-                                    "Groups": [
-                                        "{{ $securityGroupIDs }}"
-                                    ],
-                                    "NetworkInterfaceId": null,
-                                    "PrivateIpAddress": null,  {{/* will be set by plugin if logical id is known */}}
-                                    "PrivateIpAddresses": null,
-                                    "SecondaryPrivateIpAddressCount": null,
-                                    "SubnetId": "{{ $subnetID }}"
-                                }
-                            ],
-                            "Placement": {
-                                "AvailabilityZone": "{{ $availabilityZone }}",
-                                "Tenancy": null
-                            },
-                            "PrivateIpAddress": null,
-                            "RamdiskId": null,
-                            "SecurityGroupIds": null,
-                            "SecurityGroups": null,
-                            "SubnetId": null,
-                            "UserData": null
-                        }
-                    }
-                }
+                "Instance": {{ include "aws/manager.json" }}
             }
         }
     }
@@ -115,8 +81,8 @@
                     "Plugin": "instance-aws",
                     "Properties": {
                         "Tags": {
-                            "cluster-name": "{{ $clusterName }}",
-                            "role" : "workers"
+                            "infrakit.clusterName": "{{ $clusterName }}",
+                            "infrakit.role" : "workers"
                         },
                         "RunInstancesInput": {
                             "BlockDeviceMappings": null,

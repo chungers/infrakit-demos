@@ -1,0 +1,50 @@
+{{/*
+
+Instance plugin config for managers on AWS
+
+*/}}
+{
+    "Plugin": "instance-aws",
+    "Properties": {
+        "Tags": {
+            "infrakit.clusterName": "{{ $clusterName }}",
+            "infrakit.role" : "managers"
+        },
+        "RunInstancesInput": {
+            "BlockDeviceMappings": null,
+            "EbsOptimized": null,
+            "IamInstanceProfile": {
+                "Arn": "{{ $iam.InstanceProfileArn }}",
+                "Name": null
+            },
+            "ImageId": "{{ $amiID }}",
+            "InstanceType": "{{ $instanceType }}",
+            "KeyName": "{{ $keyName }}",
+            "NetworkInterfaces": [
+                {
+                    "AssociatePublicIpAddress": true,
+                    "DeleteOnTermination": true,
+                    "DeviceIndex": 0,
+                    "Groups": [
+                        "{{ $securityGroupIDs }}"
+                    ],
+                    "NetworkInterfaceId": null,
+                    "PrivateIpAddress": null,  {{/* will be set by plugin if logical id is known */}}
+                    "PrivateIpAddresses": null,
+                    "SecondaryPrivateIpAddressCount": null,
+                    "SubnetId": "{{ $subnetID }}"
+                }
+            ],
+            "Placement": {
+                "AvailabilityZone": "{{ $availabilityZone }}",
+                "Tenancy": null
+            },
+            "PrivateIpAddress": null,
+            "RamdiskId": null,
+            "SecurityGroupIds": null,
+            "SecurityGroups": null,
+            "SubnetId": null,
+            "UserData": null
+        }
+    }
+}
