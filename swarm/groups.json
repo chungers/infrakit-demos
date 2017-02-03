@@ -81,7 +81,7 @@ the instances it manages reside.
                     "Plugin": "instance-aws",
                     "Properties": {
                         "Tags": {
-                            "infrakit.clusterName": "{{ $clusterName }}",
+                            "infrakit.clusterName": "{{ var "clusterName" }}",
                             "infrakit.role" : "workers"
                         },
                         "RunInstancesInput": {
