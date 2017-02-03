@@ -7,7 +7,7 @@ Instance plugin config for managers on AWS
     "Plugin": "instance-aws",
     "Properties": {
         "Tags": {
-            "infrakit.clusterName": "{{ $clusterName }}",
+            "infrakit.clusterName": "{{ var "clusterName" }}",
             "infrakit.role" : "managers"
         },
         "RunInstancesInput": {
