@@ -1,0 +1,26 @@
+{{/*
+AWS specific - This is where we introspect the environment and export the values to other templates.
+*/}}
+
+{{ global "availabilityZone" (include "http://169.254.169.254/latest/meta-data/placement/availability-zone") }}
+{{ global "amiID" (include "http://169.254.169.254/latest/meta-data/ami-id") }}
+{{ global "instanceType" (include "http://169.254.169.254/latest/meta-data/instance-type") }}
+{{ global "keyName" (include "http://169.254.169.254/latest/meta-data/public-keys/0/openssh-key" | split " ")._2 | trim) }}
+
+{{ global "mac" (include "http://169.254.169.254/latest/meta-data/network/interfaces/macs") }} {{/* assumes only one */}}
+{{ global "netprefix" (cat "http://169.254.169.254/latest/meta-data/network/interfaces/macs/" $mac | nospace) }}
+
+ {{/* assumes only one */}}
+{{ global "securityGroups" (cat $netprefix "security-groups" | nospace | include) }}
+{{ global "$securityGroupIDs" (cat $netprefix "security-group-ids" | nospace | include) }}
+
+{{ global "subnetID" (cat $netprefix "subnet-id" | nospace | include) }}
+{{ global "vpcID" (cat $netprefix "vpc-id" | nospace | include) }}
+
+{{ global "iam" (include "http://169.254.169.254/latest/meta-data/iam/info" | from_json) }} {{/* parsed as object */}}
+
+
+{
+    "Managers" : {{ include "manager.json" }},
+    "Workers"  : {{ include "worker.json" }}
+}

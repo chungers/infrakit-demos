@@ -1,6 +1,6 @@
 {{/*
 
-Instance plugin config for managers on AWS
+Config for workers on AWS
 
 */}}
 {
@@ -8,16 +8,15 @@ Instance plugin config for managers on AWS
     "Properties": {
         "Tags": {
             "infrakit.clusterName": "{{ var "clusterName" }}",
-            "infrakit.role" : "managers"
+            "infrakit.role" : "workers"
         },
         "RunInstancesInput": {
             "BlockDeviceMappings": null,
+            "DisableApiTermination": null,
             "EbsOptimized": null,
-            "IamInstanceProfile": {
-                "Arn": "{{ (var "iam").InstanceProfileArn }}",
-                "Name": null
-            },
+            "IamInstanceProfile": null,
             "ImageId": "{{ var "amiID" }}",
+            "InstanceInitiatedShutdownBehavior": null,
             "InstanceType": "{{ var "instanceType" }}",
             "KeyName": "{{ var "keyName" }}",
             "NetworkInterfaces": [
@@ -29,13 +28,14 @@ Instance plugin config for managers on AWS
                         "{{ var "securityGroupIDs" }}"
                     ],
                     "NetworkInterfaceId": null,
-                    "PrivateIpAddress": null,  {{/* will be set by plugin if logical id is known */}}
+                    "PrivateIpAddress": null,
                     "PrivateIpAddresses": null,
                     "SecondaryPrivateIpAddressCount": null,
                     "SubnetId": "{{ var "subnetID" }}"
                 }
             ],
             "Placement": {
+                "Affinity": null,
                 "AvailabilityZone": "{{ var "availabilityZone" }}",
                 "Tenancy": null
             },

@@ -9,28 +9,17 @@ This is to support the use case where infrakit is running *inside* the cloud env
 the instances it manages reside.
 
  */}}
-{{ global "clusterName" "super30" }}
-
-{{ $availabilityZone := include "http://169.254.169.254/latest/meta-data/placement/availability-zone" }}
-{{ $amiID := include "http://169.254.169.254/latest/meta-data/ami-id" }}
-{{ $instanceType := include "http://169.254.169.254/latest/meta-data/instance-type" }}
-{{ $keyName := (include "http://169.254.169.254/latest/meta-data/public-keys/0/openssh-key" | split " ")._2 | trim }}
-
-{{ $mac:= include "http://169.254.169.254/latest/meta-data/network/interfaces/macs"}} {{/* assumes only one */}}
-{{ $netprefix:= cat "http://169.254.169.254/latest/meta-data/network/interfaces/macs/" $mac | nospace }}
-{{ $securityGroups := cat $netprefix "security-groups" | nospace | include }}     {{/* assumes only one */}}
-{{ $securityGroupIDs := cat $netprefix "security-group-ids" | nospace | include }}  {{/* assumes only one */}}
-{{ $subnetID := cat $netprefix "subnet-id" | nospace | include }}
-{{ $vpcID := cat $netprefix "vpc-id" | nospace | include }}
-
-{{ $iam := include "http://169.254.169.254/latest/meta-data/iam/info" | from_json }} {{/* parsed as object */}}
-
+{{ $clusterName := "super30" }}
 {{ $dockerEngine := "tcp://192.168.2.200:4243" }}
 {{ $swarmLeaderIP := "192.168.2.200" }}
 {{ $managerInit := "https://chungers.github.io/infrakit-demos/swarm/manager-init.sh" }}
 {{ $workerInit := "https://chungers.github.io/infrakit-demos/swarm/worker-init.sh" }}
-
 {{ $workerSize := 3 }}
+
+{{ $myGroups := include "aws/groups.json" | from_json }}
+
+{{/* This is necessary to make parameters visible in all the included templates via the 'include' function. */}}
+
 [
     {
         "Plugin": "group",
@@ -54,7 +43,7 @@ the instances it manages reside.
                         }
                     }
                 },
-                "Instance": {{ include "aws/manager.json" }}
+                "Instance": {{ $myGroups.Managers | to_json }}
             }
         }
     }
@@ -77,51 +66,7 @@ the instances it manages reside.
                         }
                     }
                 },
-                "Instance": {
-                    "Plugin": "instance-aws",
-                    "Properties": {
-                        "Tags": {
-                            "infrakit.clusterName": "{{ var "clusterName" }}",
-                            "infrakit.role" : "workers"
-                        },
-                        "RunInstancesInput": {
-                            "BlockDeviceMappings": null,
-                            "DisableApiTermination": null,
-                            "EbsOptimized": null,
-                            "IamInstanceProfile": null,
-                            "ImageId": "{{ $amiID }}",
-                            "InstanceInitiatedShutdownBehavior": null,
-                            "InstanceType": "{{ $instanceType }}",
-                            "KeyName": "{{ $keyName }}",
-                            "NetworkInterfaces": [
-                                {
-                                    "AssociatePublicIpAddress": true,
-                                    "DeleteOnTermination": true,
-                                    "DeviceIndex": 0,
-                                    "Groups": [
-                                        "{{ $securityGroupIDs }}"
-                                    ],
-                                    "NetworkInterfaceId": null,
-                                    "PrivateIpAddress": null,
-                                    "PrivateIpAddresses": null,
-                                    "SecondaryPrivateIpAddressCount": null,
-                                    "SubnetId": "{{ $subnetID }}"
-                                }
-                            ],
-                            "Placement": {
-                                "Affinity": null,
-                                "AvailabilityZone": "{{ $availabilityZone }}",
-                                "Tenancy": null
-                            },
-                            "PrivateIpAddress": null,
-                            "RamdiskId": null,
-                            "SecurityGroupIds": null,
-                            "SecurityGroups": null,
-                            "SubnetId": null,
-                            "UserData": null
-                        }
-                    }
-                }
+                "Instance": {{ $myGroups.Workers | to_json }}
             }
         }
     }
