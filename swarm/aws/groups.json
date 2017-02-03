@@ -1,23 +1,33 @@
 {{/*
+
 AWS specific - This is where we introspect the environment and export the values to other templates.
+
 */}}
 
-{{ global "availabilityZone" (include "http://169.254.169.254/latest/meta-data/placement/availability-zone") }}
-{{ global "amiID" (include "http://169.254.169.254/latest/meta-data/ami-id") }}
-{{ global "instanceType" (include "http://169.254.169.254/latest/meta-data/instance-type") }}
-{{ global "keyName" (include "http://169.254.169.254/latest/meta-data/public-keys/0/openssh-key" | split " ")._2 | trim) }}
+{{ $availabilityZone := include "http://169.254.169.254/latest/meta-data/placement/availability-zone" }}
+{{ $amiID := include "http://169.254.169.254/latest/meta-data/ami-id" }}
+{{ $instanceType := include "http://169.254.169.254/latest/meta-data/instance-type" }}
+{{ $keyName := (include "http://169.254.169.254/latest/meta-data/public-keys/0/openssh-key" | split " ")._2 | trim }}
+{{ $mac:= include "http://169.254.169.254/latest/meta-data/network/interfaces/macs"}} {{/* assumes only one */}}
+{{ $netprefix:= cat "http://169.254.169.254/latest/meta-data/network/interfaces/macs/" $mac | nospace }}
+{{ $securityGroups := cat $netprefix "security-groups" | nospace | include }}     {{/* assumes only one */}}
+{{ $securityGroupIDs := cat $netprefix "security-group-ids" | nospace | include }}  {{/* assumes only one */}}
+{{ $subnetID := cat $netprefix "subnet-id" | nospace | include }}
+{{ $vpcID := cat $netprefix "vpc-id" | nospace | include }}
 
-{{ global "mac" (include "http://169.254.169.254/latest/meta-data/network/interfaces/macs") }} {{/* assumes only one */}}
-{{ global "netprefix" (cat "http://169.254.169.254/latest/meta-data/network/interfaces/macs/" $mac | nospace) }}
+{{ $iam := include "http://169.254.169.254/latest/meta-data/iam/info" | from_json }} {{/* parsed as object */}}
 
- {{/* assumes only one */}}
-{{ global "securityGroups" (cat $netprefix "security-groups" | nospace | include) }}
-{{ global "$securityGroupIDs" (cat $netprefix "security-group-ids" | nospace | include) }}
-
-{{ global "subnetID" (cat $netprefix "subnet-id" | nospace | include) }}
-{{ global "vpcID" (cat $netprefix "vpc-id" | nospace | include) }}
-
-{{ global "iam" (include "http://169.254.169.254/latest/meta-data/iam/info" | from_json) }} {{/* parsed as object */}}
+{{/* export variables so that they are visible in included templates */}}
+{{ global "availabilityZone" $availabilityZone }}
+{{ global "amiID" $amiID }}
+{{ global "instanceType" $instanceType }}
+{{ global "keyName" $keyName }}
+{{ global "mac" $mac }}
+{{ global "securityGroups" $securityGroups }}
+{{ global "$securityGroupIDs" $securityGroupIDs }}
+{{ global "subnetID" $subnetID }}
+{{ global "vpcID" $vpcID }}
+{{ global "iam" $iam }} {{/* an object */}}
 
 
 {
