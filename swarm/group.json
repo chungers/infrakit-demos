@@ -1,0 +1,162 @@
+{{/* Variables */}}
+{{ $clusterName := "super30" }}
+
+{{ $availabilityZone := include "http://169.254.169.254/latest/meta-data/placement/availability-zone" }}
+{{ $amiID := include "http://169.254.169.254/latest/meta-data/ami-id" }}
+{{ $instanceType := include "http://169.254.169.254/latest/meta-data/instance-type" }}
+{{ $keyName := (include "http://169.254.169.254/latest/meta-data/public-keys/0/openssh-key" | split " ")._2 | trim }}
+
+{{ $mac:= include "http://169.254.169.254/latest/meta-data/network/interfaces/macs"}} {{/* assumes only one */}}
+{{ $netprefix:= cat "http://169.254.169.254/latest/meta-data/network/interfaces/macs/" $mac | nospace }}
+{{ $securityGroups := cat $netprefix "security-groups" | nospace | include }}     {{/* assumes only one */}}
+{{ $securityGroupIDs := cat $netprefix "security-group-ids" | nospace | include }}  {{/* assumes only one */}}
+{{ $subnetID := cat $netprefix "subnet-id" | nospace | include }}
+{{ $vpcID := cat $netprefix "vpc-id" | nospace | include }}
+
+{{ $iam := include "http://169.254.169.254/latest/meta-data/iam/info" | from_json }} {{/* parsed as object */}}
+
+{{ $dockerEngine := "tcp://192.168.2.200:4243" }}
+{{ $swarmLeaderIP := "192.168.2.200" }}
+{{ $managerInit := "https://chungers.github.io/infrakit-demos/swarm/manager-init.sh" }}
+{{ $workerInit := "https://chungers.github.io/infrakit-demos/swarm/worker-init.sh" }}
+
+{{ $workerSize := 3 }}
+[
+    {
+        "Plugin": "group",
+        "Properties": {
+            "ID": "swarm-managers",
+            "Properties": {
+                "Allocation": {
+                    "LogicalIDs": [
+                        "{{ $swarmLeaderIP }}",
+                        "192.168.2.201",
+                        "192.168.2.202"
+                    ]
+                },
+                "Flavor": {
+                    "Plugin": "flavor-swarm/manager",
+                    "Properties": {
+                        "InitScriptTemplateURL": "{{ $managerInit }}",
+                        "SwarmJoinIP": "{{ $swarmLeaderIP }}",
+                        "Docker" : {
+                            "Host" : "{{ $dockerEngine }}"
+                        }
+                    }
+                },
+                "Instance": {
+                    "Plugin": "instance-aws",
+                    "Properties": {
+                        "Tags": {
+                            "cluster-name": "{{ $clusterName }}",
+                            "role" : "managers"
+                        },
+                        "RunInstancesInput": {
+                            "BlockDeviceMappings": null,
+                            "EbsOptimized": null,
+                            "IamInstanceProfile": {
+                                "Arn": "{{ $iam.InstanceProfileArn }}",
+                                "Name": null
+                            },
+                            "ImageId": "{{ $amiID }}",
+                            "InstanceType": "{{ $instanceType }}",
+                            "KeyName": "{{ $keyName }}",
+                            "NetworkInterfaces": [
+                                {
+                                    "AssociatePublicIpAddress": true,
+                                    "DeleteOnTermination": true,
+                                    "DeviceIndex": 0,
+                                    "Groups": [
+                                        "{{ $securityGroupIDs }}"
+                                    ],
+                                    "NetworkInterfaceId": null,
+                                    "PrivateIpAddress": null,  {{/* will be set by plugin if logical id is known */}}
+                                    "PrivateIpAddresses": null,
+                                    "SecondaryPrivateIpAddressCount": null,
+                                    "SubnetId": "{{ $subnetID }}"
+                                }
+                            ],
+                            "Placement": {
+                                "AvailabilityZone": "{{ $availabilityZone }}",
+                                "Tenancy": null
+                            },
+                            "PrivateIpAddress": null,
+                            "RamdiskId": null,
+                            "SecurityGroupIds": null,
+                            "SecurityGroups": null,
+                            "SubnetId": null,
+                            "UserData": null
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ,
+    {
+        "Plugin": "group",
+        "Properties": {
+            "ID": "swarm-workers",
+            "Properties": {
+                "Allocation": {
+                    "Size": {{ $workerSize }}
+                },
+                "Flavor": {
+                    "Plugin": "flavor-swarm/worker",
+                    "Properties": {
+                        "InitScriptTemplateURL": "{{ $workerInit }}",
+                        "SwarmJoinIP": "{{ $swarmLeaderIP }}",
+                        "Docker" : {
+                            "Host" : "{{ $dockerEngine }}"
+                        }
+                    }
+                },
+                "Instance": {
+                    "Plugin": "instance-aws",
+                    "Properties": {
+                        "Tags": {
+                            "cluster-name": "{{ $clusterName }}",
+                            "role" : "workers"
+                        },
+                        "RunInstancesInput": {
+                            "BlockDeviceMappings": null,
+                            "DisableApiTermination": null,
+                            "EbsOptimized": null,
+                            "IamInstanceProfile": null,
+                            "ImageId": "{{ $amiID }}",
+                            "InstanceInitiatedShutdownBehavior": null,
+                            "InstanceType": "{{ $instanceType }}",
+                            "KeyName": "{{ $keyName }}",
+                            "NetworkInterfaces": [
+                                {
+                                    "AssociatePublicIpAddress": true,
+                                    "DeleteOnTermination": true,
+                                    "DeviceIndex": 0,
+                                    "Groups": [
+                                        "{{ $securityGroupIDs }}"
+                                    ],
+                                    "NetworkInterfaceId": null,
+                                    "PrivateIpAddress": null,
+                                    "PrivateIpAddresses": null,
+                                    "SecondaryPrivateIpAddressCount": null,
+                                    "SubnetId": "{{ $subnetID }}"
+                                }
+                            ],
+                            "Placement": {
+                                "Affinity": null,
+                                "AvailabilityZone": "{{ $availabilityZone }}",
+                                "Tenancy": null
+                            },
+                            "PrivateIpAddress": null,
+                            "RamdiskId": null,
+                            "SecurityGroupIds": null,
+                            "SecurityGroups": null,
+                            "SubnetId": null,
+                            "UserData": null
+                        }
+                    }
+                }
+            }
+        }
+    }
+]
