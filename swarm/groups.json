@@ -10,8 +10,8 @@ the instances it manages reside.
 
  */}}
 {{ $clusterName := "infrakit-demos" }}
-{{ $dockerEngine := "tcp://192.168.2.200:4243" }}
-{{ $swarmLeaderIP := "192.168.2.200" }}
+{{ $dockerEngine := "tcp://172.31.12.301:4243" }}
+{{ $swarmLeaderIP := "172.31.12.301" }}
 {{ $managerInit := "https://chungers.github.io/infrakit-demos/swarm/manager-init.sh" }}
 {{ $workerInit := "https://chungers.github.io/infrakit-demos/swarm/worker-init.sh" }}
 {{ $workerSize := 3 }}
@@ -31,8 +31,8 @@ the instances it manages reside.
                 "Allocation": {
                     "LogicalIDs": [
                         "{{ $swarmLeaderIP }}",
-                        "192.168.2.201",
-                        "192.168.2.202"
+                        "172.31.12.302",
+                        "172.31.12.303"
                     ]
                 },
                 "Flavor": {
