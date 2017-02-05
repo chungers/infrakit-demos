@@ -9,19 +9,21 @@ This is to support the use case where infrakit is running *inside* the cloud env
 the instances it manages reside.
 
  */}}
-{{ $clusterName := "infrakit-demos" }}
-{{ $dockerEngine := "tcp://172.31.12.301:4243" }}
-{{ $swarmLeaderIP := "172.31.12.301" }}
-{{ $managerInit := "https://chungers.github.io/infrakit-demos/swarm/manager-init.sh" }}
-{{ $workerInit := "https://chungers.github.io/infrakit-demos/swarm/worker-init.sh" }}
-{{ $workerSize := 3 }}
 
-{{ global "/cluster/name" $clusterName }}
+{{ global "/cluster/name" "infrakit-demos" }}
 {{ global "/local/instance/user" "ubuntu" }} {{/* Docker user on installed instances */}}
 
-{{ $myGroups := include "aws/groups.json" | from_json }}
+{{ $swarmLeaderIP := "172.31.16.101" }}
+{{ $managerIPs := tuple $swarmLeaderIP "172.31.16.102" "172.31.16.102" }}
 
-{{/* This is necessary to make parameters visible in all the included templates via the 'include' function. */}}
+{{ $workerSize := 3 }}
+{{ $dockerEngine := join "tcp://" $swarmLeaderIP ":4243" | nospace }} {{/* for this flavor to connect to */}}
+
+
+{{ $managerInit := "https://chungers.github.io/infrakit-demos/swarm/manager-init.sh" }}
+{{ $workerInit := "https://chungers.github.io/infrakit-demos/swarm/worker-init.sh" }}
+
+{{ $myGroups := include "aws/groups.json" | from_json }}
 
 [
     {
@@ -30,11 +32,7 @@ the instances it manages reside.
             "ID": "swarm-managers",
             "Properties": {
                 "Allocation": {
-                    "LogicalIDs": [
-                        "{{ $swarmLeaderIP }}",
-                        "172.31.12.302",
-                        "172.31.12.303"
-                    ]
+                    "LogicalIDs": {{ $managerIPs | to_json }}
                 },
                 "Flavor": {
                     "Plugin": "flavor-swarm/manager",
