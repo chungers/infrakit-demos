@@ -1,3 +1,5 @@
+{{ source "common.ikt" }}
+
 #!/bin/sh
 set -o errexit
 set -o nounset
@@ -5,6 +7,9 @@ set -o xtrace
 
 {{/* Install Docker */}}
 {{ include "install-docker.sh" }}
+
+{{/* Set up infrakit */}}
+{{ include "infrakit.sh" }}
 
 mkdir -p /etc/docker
 cat << EOF > /etc/docker/daemon.json

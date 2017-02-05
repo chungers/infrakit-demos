@@ -10,8 +10,9 @@ the instances it manages reside.
 
  */}}
 
-{{ global "/cluster/name" "infrakit-demos" }}
-{{ global "/local/instance/user" "ubuntu" }} {{/* Docker user on installed instances */}}
+{{ include "common.ikt" }} {{/* a common template included here to define global variables */}}
+
+{{/* Local variables */}}
 
 {{ $swarmLeaderIP := "172.31.16.101" }}
 {{ $managerIPs := tuple $swarmLeaderIP "172.31.16.102" "172.31.16.103" }}
@@ -19,9 +20,8 @@ the instances it manages reside.
 {{ $workerSize := 3 }}
 {{ $dockerEngine := cat "tcp://" $swarmLeaderIP ":4243" | nospace }} {{/* for this flavor to connect to */}}
 
-
-{{ $managerInit := "https://chungers.github.io/infrakit-demos/swarm/manager-init.sh" }}
-{{ $workerInit := "https://chungers.github.io/infrakit-demos/swarm/worker-init.sh" }}
+{{ $managerInit := cat (ref "/cluster/config/urlRoot") "manager-init.sh" | nospace }}
+{{ $workerInit := cat (ref "/cluster/config/urlRoot") "worker-init.sh" | nospace }}
 
 {{ $myGroups := include "aws/groups.json" | from_json }}
 

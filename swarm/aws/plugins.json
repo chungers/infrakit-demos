@@ -1,0 +1,12 @@
+{{ include "../common.ikt" }}
+{
+    "Plugin" : "instance-aws",
+    "Launch" : {
+        "os" : {
+            "Cmd" : "infrakit-instance-aws --log 5 > {{env "INFRAKIT_HOME"}}/logs/instance-aws.log 2>&1"
+        },
+        "docker-run" : {
+            "Cmd" : "docker run -d -v {{env "INFRAKIT_HOME"}}/:/infrakit/ -e INFRAKIT_HOME=/infrakit -e INFRAKIT_PLUGINS_DIR=/infrakit/plugins infrakit/aws:dev infrakit-instance-aws --log 5 > {{env "INFRAKIT_HOME"}}/logs/instance-aws.log 2>&1"
+        }
+    }
+}

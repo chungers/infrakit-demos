@@ -1,0 +1,11 @@
+{{/* Define globals that are used by all the templates included from this point on. */}}
+
+{{ global "/cluster/name" "infrakit-demos" }}
+{{ global "/cluster/config/urlRoot" "https://chungers.github.io/infrakit-demos/swarm/" }}
+{{ global "/cluster/config/groups.json" (cat (ref "/cluster/config/urlRoot") "groups.json" | nospace) }}
+
+{{ global "/compute/instance/user" "ubuntu" }} {{/* Docker user on installed instances */}}
+
+{{ global "/infrakit/docker/image" "infrakit/devbundle:dev" }}
+{{ global "/infrakit/docker/options/mount" "-v /usr/bin/docker:/usr/bin/docker -v /infrakit/:/infrakit/" }}
+{{ global "/infrakit/docker/options/env" "-e INFRAKIT_HOME=/infrakit -e INFRAKIT_PLUGINS_DIR=/infrakit/plugins" }}
