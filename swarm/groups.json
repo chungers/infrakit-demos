@@ -17,7 +17,7 @@ the instances it manages reside.
 {{ $managerIPs := tuple $swarmLeaderIP "172.31.16.102" "172.31.16.102" }}
 
 {{ $workerSize := 3 }}
-{{ $dockerEngine := join "tcp://" $swarmLeaderIP ":4243" | nospace }} {{/* for this flavor to connect to */}}
+{{ $dockerEngine := cat "tcp://" $swarmLeaderIP ":4243" | nospace }} {{/* for this flavor to connect to */}}
 
 
 {{ $managerInit := "https://chungers.github.io/infrakit-demos/swarm/manager-init.sh" }}
