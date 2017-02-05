@@ -17,6 +17,7 @@ the instances it manages reside.
 {{ $workerSize := 3 }}
 
 {{ global "/cluster/name" $clusterName }}
+{{ global "/local/instance/user" "ubuntu" }} {{/* Docker user on installed instances */}}
 
 {{ $myGroups := include "aws/groups.json" | from_json }}
 
