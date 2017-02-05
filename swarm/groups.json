@@ -14,7 +14,7 @@ the instances it manages reside.
 {{ global "/local/instance/user" "ubuntu" }} {{/* Docker user on installed instances */}}
 
 {{ $swarmLeaderIP := "172.31.16.101" }}
-{{ $managerIPs := tuple $swarmLeaderIP "172.31.16.102" "172.31.16.102" }}
+{{ $managerIPs := tuple $swarmLeaderIP "172.31.16.102" "172.31.16.103" }}
 
 {{ $workerSize := 3 }}
 {{ $dockerEngine := cat "tcp://" $swarmLeaderIP ":4243" | nospace }} {{/* for this flavor to connect to */}}
