@@ -10,7 +10,7 @@ the instances it manages reside.
 
  */}}
 
-{{ include "common.ikt" }} {{/* a common template included here to define global variables */}}
+{{ source "common.ikt" }} {{/* a common template included here to define global variables */}}
 
 {{/* Local variables */}}
 

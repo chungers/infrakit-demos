@@ -1,4 +1,4 @@
-{{ include "../common.ikt" }}
+{{ source "../common.ikt" }}
 {
     "Plugin" : "instance-aws",
     "Launch" : {
