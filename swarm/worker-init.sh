@@ -1,6 +1,7 @@
+#!/bin/bash
+
 {{ source "common.ikt" }}
 
-#!/bin/sh
 set -o errexit
 set -o nounset
 set -o xtrace

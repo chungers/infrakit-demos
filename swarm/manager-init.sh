@@ -1,6 +1,7 @@
+#!/bin/bash
+
 {{ source "common.ikt" }}
 
-#!/bin/sh
 set -o errexit
 set -o nounset
 set -o xtrace
@@ -24,7 +25,7 @@ sleep 5
 
 {{ if eq INSTANCE_LOGICAL_ID SPEC.SwarmJoinIP }}
 
-  {{/* The first node of the special allocations will initialize the swarm. */}}
+ {{/* The first node of the special allocations will initialize the swarm. */}}
   docker swarm init --advertise-addr {{ INSTANCE_LOGICAL_ID }}
 
   # Tell Docker to listen on port 4243 for remote API access. This is optional.
