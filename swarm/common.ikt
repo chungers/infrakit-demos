@@ -8,5 +8,5 @@
 
 {{ global "/infrakit/home" "/home/ubuntu/.infrakit" }}
 {{ global "/infrakit/docker/image" "infrakit/devbundle:dev" }}
-{{ global "/infrakit/docker/options/mount" "-v /home/ubuntu/infrakit/:/infrakit/" }}
+{{ global "/infrakit/docker/options/mount" (cat "-v " (ref "/infrakit/home") ":/infrakit" | nospace) }}
 {{ global "/infrakit/docker/options/env" "-e INFRAKIT_HOME=/infrakit -e INFRAKIT_PLUGINS_DIR=/infrakit/plugins" }}
