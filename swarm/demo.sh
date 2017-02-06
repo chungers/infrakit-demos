@@ -1,3 +1,5 @@
+#!/bin/bash
+
 {{ source "common.ikt" }}
 
 # Set up infrakit.  This assumes Docker has been installed

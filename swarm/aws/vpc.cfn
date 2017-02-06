@@ -3,9 +3,39 @@
     "Description": "InfraKit VPC Builder",
 
     "Parameters": {
+        "KeyName": {
+            "Description": "Name of an existing EC2 KeyPair to enable SSH access to the instances",
+            "Type": "AWS::EC2::KeyPair::KeyName",
+            "MinLength": "1",
+            "ConstraintDescription": "must be the name of an existing EC2 KeyPair."
+        },
+        "InstanceType" : {
+            "Type" : "String",
+            "Description" : "EC2 HVM instance type (t2.micro, m3.medium, etc).",
+            "AllowedValues" : [ "t2.micro","t2.small","t2.medium" ],
+            "ConstraintDescription" : "Must be a valid EC2 HVM instance type.",
+            "Default" : "t2.micro"
+        },
+        "BootstrapNodePrivateIP" : {
+            "Type" : "String",
+            "Description" : "Private IP of the bootstrap node",
+            "Default" : "172.31.16.100"
+        }
     },
 
     "Metadata" : {
+        "AWS::CloudFormation::Interface" : {
+            "ParameterGroups" : [
+                {
+                    "Label" : { "default":"Cluster Properties" },
+                    "Parameters" : [ "InstanceType", "KeyName" ]
+                }
+            ],
+            "ParameterLabels" : {
+                "InstanceType" : { "default" : "Agent worker instance type?" },
+                "KeyName" : { "default" : "Which SSH key to use?" }
+            }
+        }
     },
 
     "Mappings": {
@@ -15,6 +45,37 @@
             },
             "subnet1" : {
                 "cidr": "172.31.16.0/20"
+            }
+        },
+
+        "AWSInstanceType2Arch": {
+            "t2.micro": {
+                "Arch": "HVM64"
+            },
+            "t2.small": {
+                "Arch": "HVM64"
+            },
+            "t2.medium": {
+                "Arch": "HVM64"
+            }
+        },
+
+        "AWSRegionArch2AMI": {
+            "eu-central-1": {
+                "HVM64": "ami-78559817",
+                "HVMG2": "NOT_SUPPORTED"
+            },
+            "us-east-1": {
+                "HVM64": "ami-49c9295f",
+                "HVMG2": "NOT_SUPPORTED"
+            },
+            "us-west-1": {
+                "HVM64": "ami-3e21725e",
+                "HVMG2": "NOT_SUPPORTED"
+            },
+            "us-west-2": {
+                "HVM64": "ami-5e63d13e",
+                "HVMG2": "NOT_SUPPORTED"
             }
         }
     },
@@ -165,9 +226,57 @@
                     "Ref": "ProvisionerRole"
                 } ]
             }
+        },
+
+        "BootstrapInstance" : {
+            "DependsOn": "Subnet1",
+            "Type" : "AWS::EC2::Instance",
+            "Properties" : {
+                "KeyName" : { "Ref" : "KeyName" },
+                "InstanceType" : { "Ref" : "InstanceType" },
+                "IamInstanceProfile" : { "Ref" : "InstanceProfile" },
+                "NetworkInterfaces" : [
+                    {
+                        "DeviceIndex" : "0",
+                        "Description" : "main interface",
+                        "DeleteOnTermination" : true,
+                        "AssociatePublicIpAddress" : true,
+                        "SubnetId" : { "Ref" : "Subnet1" },
+                        "GroupSet" : [ {"Ref" : "SecurityGroup"} ]
+                    }
+                ],
+                "AvailabilityZone" : { "Fn::GetAtt" : [ "Subnet1", "AvailabilityZone" ] },
+                "ImageId" : {
+                    "Fn::FindInMap": ["AWSRegionArch2AMI", {
+                        "Ref": "AWS::Region"
+                    }, {
+                        "Fn::FindInMap": ["AWSInstanceType2Arch", {"Ref" : "InstanceType"}, "Arch"]
+                    }]
+                },
+                "UserData" : {
+                    "Fn::Base64" : {
+                        "Fn::Join" :
+                        [ "", [
+                          "#!/bin/sh\n",
+                          "apt-get update -y; apt-get install -y jq \n",
+                          "wget -qO- https://get.docker.com/ | sh \n"
+                        ]]
+                    }
+                },
+                "Tags" : [
+                    {
+                        "Key" : "Name",
+                        "Value" : { "Fn::Join": [ "-", [ { "Ref": "AWS::StackName"}, "Bootstrap" ] ] }
+                    }
+                ]
+            }
         }
     },
 
-    "Outputs": {
+    "Outputs" : {
+        "BootNodePublicIP" : {
+            "Description" : "The public IP of the boot node",
+            "Value" : { "Fn::GetAtt" : [ "BootstrapInstance", "PublicIp" ] }
+        }
     }
 }
