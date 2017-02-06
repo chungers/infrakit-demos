@@ -4,15 +4,6 @@
 
 [
     {
-        "Plugin" : "infrakit",
-        "Launch" : {
-            "docker-run": {
-                "Cmd" : "docker run -d --name infrakit {{ ref "/infrakit/docker/options/mount" }} {{ ref "/infrakit/docker/options/env" }} {{$dockerImage}} infrakit plugin start --wait --config-url {{$pluginsURL}} --exec os manager group-stateless flavor-swarm --log 5 > {{$logDir}}/infrakit.log 2>&1"
-            }
-        }
-    }
-    ,
-    {
         "Plugin" : "manager",
         "Launch" : {
             "os": {
