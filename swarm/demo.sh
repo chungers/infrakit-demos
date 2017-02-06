@@ -1,19 +1,11 @@
 {{ source "common.ikt" }}
 
 # Set up infrakit.  This assumes Docker has been installed
-
-mkdir -p /infrakit/plugins /infrakit/configs /infrakit/logs
+{{ include "infrakit.sh" }}
 
 # For N+1 case, we use leader file and not swarm
-echo group > /infrakit/leader
+echo group > {{ref "/infrakit/home"}}/leader
 
-{{ $bashrc := cat "/home/" (ref "/compute/instance/user") "/.bashrc" | nospace }}
-{{ $dockerImage := ref "/infrakit/docker/image" }}
-{{ $dockerMounts := ref "/infrakit/docker/options/mount" }}
-{{ $dockerEnvs := ref "/infrakit/docker/options/env" }}
-{{ $pluginsURL := cat (ref "/cluster/config/urlRoot") "plugins.json" | nospace }}
-
-echo "alias infrakit='docker run --rm {{$dockerMounts}} {{$dockerEnvs}} {{$dockerImage}} infrakit'" >> {{ $bashrc }}
 
 echo "Starting up infrakit"
 

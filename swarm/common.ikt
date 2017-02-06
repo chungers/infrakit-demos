@@ -6,6 +6,7 @@
 
 {{ global "/compute/instance/user" "ubuntu" }} {{/* Docker user on installed instances */}}
 
+{{ global "/infrakit/home" "/home/ubuntu/.infrakit" }}
 {{ global "/infrakit/docker/image" "infrakit/devbundle:dev" }}
-{{ global "/infrakit/docker/options/mount" "-v /infrakit/:/infrakit/" }}
+{{ global "/infrakit/docker/options/mount" "-v /home/ubuntu/infrakit/:/infrakit/" }}
 {{ global "/infrakit/docker/options/env" "-e INFRAKIT_HOME=/infrakit -e INFRAKIT_PLUGINS_DIR=/infrakit/plugins" }}
