@@ -24,5 +24,5 @@ docker run -d --rm --name ensemble {{$dockerMounts}} {{$dockerEnvs}} {{$dockerIm
        flavor-swarm
 
 echo "Starting up instance-aws plugin"
-docker run -d --rm --name instance-aws {{$dockerMounts}} {{$dockerEnvs}} infrakit/aws:dev \
+docker run -d --rm --name instance-aws {{$dockerMounts}} {{$dockerEnvs}} infrakit/aws:dev infrakit-instance-aws \
        infrakit-instance-aws --log 5
