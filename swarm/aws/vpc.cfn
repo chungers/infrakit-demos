@@ -128,12 +128,32 @@
                     "Statement": [ {
                         "Effect": "Allow",
                         "Principal": {
-                            "Service": [ "ec2.amazonaws.com", "autoscaling.amazonaws.com" ]
+                            "Service": [ "ec2.amazonaws.com" ]
                         },
                         "Action": [ "sts:AssumeRole" ]
                     } ]
                 },
                 "Path": "/"
+            }
+        },
+
+        "ProvisionerPolicies": {
+            "Type": "AWS::IAM::Policy",
+            "Properties": {
+                "PolicyName": "managers-policy",
+                "PolicyDocument": {
+                    "Version" : "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Action": "*",
+                            "Resource": "*"
+                        }
+                    ]
+                },
+                "Roles": [ {
+                    "Ref": "ProvisionerRole"
+                } ]
             }
         },
 
