@@ -1,7 +1,5 @@
 {{ source "common.ikt" }}
 
-{{ $dockerImage := ref "/infrakit/docker/image"}}
-{{ $pluginsURL := cat (ref "/cluster/config/urlRoot") "plugins.json" | nospace}}
 {{ $logDir := cat (env "INFRAKIT_HOME") "/logs" | nospace }}
 
 [

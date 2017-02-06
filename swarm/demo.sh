@@ -8,6 +8,12 @@ mkdir -p /infrakit/plugins /infrakit/configs /infrakit/logs
 {{ $dockerImage := ref "/infrakit/docker/image" }}
 {{ $dockerMounts := ref "/infrakit/docker/options/mount" }}
 {{ $dockerEnvs := ref "/infrakit/docker/options/env" }}
+{{ $pluginsURL := cat (ref "/cluster/config/urlRoot") "plugins.json" | nospace }}
 
 echo "alias infrakit='docker run --rm {{$dockerMounts}} {{$dockerEnvs}} {{$dockerImage}} infrakit'" >> {{ $bashrc }}
-echo "alias infrakit='docker run --rm {{$dockerMounts}} {{$dockerEnvs}} {{$dockerImage}} infrakit'" >> /root/.bashrc
+
+echo "Starting up infraktit"
+
+docker run -d --name infrakit {{$dockerMounts}} {{$dockerEnvs}} {{$dockerImage}} infrakit plugin start \
+       --wait --config-url {{$pluginsURL}} --exec os \
+       manager group-stateless flavor-swarm --log 5
