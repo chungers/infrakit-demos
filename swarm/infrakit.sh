@@ -13,3 +13,4 @@ mkdir -p {{$infrakitHome}}/plugins
 {{ $dockerEnvs := ref "/infrakit/docker/options/env" }}
 
 echo "alias infrakit='docker run --rm {{$dockerMounts}} {{$dockerEnvs}} {{$dockerImage}} infrakit'" >> {{ $bashrc }}
+echo "alias infrakit='docker run --rm {{$dockerMounts}} {{$dockerEnvs}} {{$dockerImage}} infrakit'" >> /root/.bashrc
