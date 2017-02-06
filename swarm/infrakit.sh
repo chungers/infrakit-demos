@@ -3,7 +3,7 @@
 # Set up infrakit.  This assumes Docker has been installed
 
 {{ $infrakitHome := ref "/infrakit/home" }}
-mkdir -p {{$infrakitHome}}/config
+mkdir -p {{$infrakitHome}}/configs
 mkdir -p {{$infrakitHome}}/logs
 mkdir -p {{$infrakitHome}}/plugins
 
