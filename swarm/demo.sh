@@ -13,12 +13,12 @@ echo group > {{ref "/infrakit/home"}}/leader
 
 echo "Starting up infrakit"
 
-docker run -d --rm --name ensemble {{$dockerMounts}} {{$dockerEnvs}} {{$dockerImage}} infrakit plugin start \
-       --wait --config-url {{$pluginsURL}} --exec os --log 5 \
+docker run -d --restart always --name ensemble {{$dockerMounts}} {{$dockerEnvs}} {{$dockerImage}} \
+       infrakit plugin start --wait --config-url {{$pluginsURL}} --exec os --log 5 \
        manager \
        group-stateless \
        flavor-swarm
 
 echo "Starting up instance-aws plugin"
-docker run -d --rm --name instance-aws {{$dockerMounts}} {{$dockerEnvs}} infrakit/aws:dev infrakit-instance-aws \
+docker run -d --restart always --name instance-aws {{$dockerMounts}} {{$dockerEnvs}} infrakit/aws:dev \
        infrakit-instance-aws --log 5
