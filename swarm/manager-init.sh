@@ -23,9 +23,7 @@ EOF
 kill -s HUP $(cat /var/run/docker.pid)
 sleep 5
 
-# Set up Docker Remote API port -- this works for upstart based systems, not systemd (before Ubuntu 15.04)
-echo DOCKER_OPTS="\"-H tcp://0.0.0.0:4243 -H unix:///var/run/docker.sock\"" >> /etc/default/docker
-service docker restart  # starts :4243
+{{ include "docker-remote-api.sh" }}{{/* starts :4243 */}}
 
 {{ if eq INSTANCE_LOGICAL_ID SPEC.SwarmJoinIP }}
 
@@ -38,3 +36,5 @@ service docker restart  # starts :4243
   docker swarm join --token {{ SWARM_JOIN_TOKENS.Manager }} {{ SPEC.SwarmJoinIP }}:2377
 
 {{ end }}
+
+# Append commands here to run other things...

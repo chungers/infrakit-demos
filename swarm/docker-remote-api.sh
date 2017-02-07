@@ -1,14 +1,6 @@
-{{ source "common.ikt" }}
+#!/bin/bash
 
-# Tested on Ubuntu/trusty
-
-apt-get update -y
-apt-get upgrade -y
-apt-get install -y jq
-
-wget -qO- https://get.docker.com/ | sh
-
-sudo usermod -aG docker {{ ref "/compute/instance/user" }}
+# Script to restart Docker and listen on 4243 remote API port.
 
 # For Upstart ONLY (pre- Ubuntu 15.04)
 if [ -d "/var/log/upstart" ]; then

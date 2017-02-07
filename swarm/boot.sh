@@ -24,3 +24,7 @@ docker run -d --name ensemble {{$dockerMounts}} {{$dockerEnvs}} {{$dockerImage}}
 echo "Starting up instance-aws plugin"
 docker run -d --name instance-aws {{$dockerMounts}} {{$dockerEnvs}} infrakit/aws:dev \
        infrakit-instance-aws --log 5
+
+echo "Commiting to infrakit"
+docker run --rm {{$dockerMounts}} {{$dockerEnvs}} {{$dockerImage}} \
+       infrakit manager commit https://chungers.github.io/infrakit-demos/swarm/groups.json
