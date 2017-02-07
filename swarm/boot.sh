@@ -12,6 +12,7 @@ echo group > {{ref "/infrakit/home"}}/leader
 {{ $dockerMounts := ref "/infrakit/docker/options/mount" }}
 {{ $dockerEnvs := ref "/infrakit/docker/options/env" }}
 {{ $pluginsURL := cat (ref "/cluster/config/urlRoot") "/plugins.json" | nospace }}
+{{ $groupsURL := cat (ref "/cluster/config/urlRoot") "/groups.json" | nospace }}
 
 echo "Starting up infrakit"
 
@@ -27,4 +28,4 @@ docker run -d --name instance-aws {{$dockerMounts}} {{$dockerEnvs}} infrakit/aws
 
 echo "Commiting to infrakit"
 docker run --rm {{$dockerMounts}} {{$dockerEnvs}} {{$dockerImage}} \
-       infrakit manager commit https://chungers.github.io/infrakit-demos/swarm/groups.json
+       infrakit manager commit {{$groupsURL}}

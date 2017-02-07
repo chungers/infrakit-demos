@@ -12,7 +12,7 @@ echo group > {{ref "/infrakit/home"}}/leader
 {{ $dockerMounts := ref "/infrakit/docker/options/mount" }}
 {{ $dockerEnvs := ref "/infrakit/docker/options/env" }}
 {{ $pluginsURL := cat (ref "/cluster/config/urlRoot") "/plugins.json" | nospace }}
-{{ $groupURL := cat (ref "/cluster/config/urlRoot") "/groups.json" | nospace }}
+{{ $groupsURL := cat (ref "/cluster/config/urlRoot") "/groups.json" | nospace }}
 
 echo "Starting up infrakit"
 
