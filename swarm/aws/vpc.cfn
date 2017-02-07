@@ -19,7 +19,7 @@
         "BootstrapNodePrivateIP" : {
             "Type" : "String",
             "Description" : "Private IP of the bootstrap node",
-            "Default" : "172.31.16.100"
+            "Default" : "172.31.16.101"
         }
     },
 
@@ -241,6 +241,7 @@
                         "Description" : "main interface",
                         "DeleteOnTermination" : true,
                         "AssociatePublicIpAddress" : true,
+                        "PrivateIpAddress" : { "Ref": "BootstrapNodePrivateIP" },
                         "SubnetId" : { "Ref" : "Subnet1" },
                         "GroupSet" : [ {"Ref" : "SecurityGroup"} ]
                     }
@@ -260,7 +261,8 @@
                             "#!/bin/sh\n",
                             "apt-get update -y; apt-get install -y jq \n",
                             "wget -qO- https://get.docker.com/ | sh \n",
-			    "docker run --rm infrakit/devbundle:dev infrakit template --url https://chungers.github.io/infrakit-demos/swarm/boot.sh | sh \n"
+                            "docker swarm init --advertise-addr ", {"Ref": "BootstrapNodePrivateIP"},
+                            "docker run --rm infrakit/devbundle:dev infrakit template --url https://chungers.github.io/infrakit-demos/swarm/boot.sh | sh \n"
                         ]]
                     }
                 },

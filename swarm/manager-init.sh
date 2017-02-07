@@ -23,7 +23,6 @@ EOF
 kill -s HUP $(cat /var/run/docker.pid)
 sleep 5
 
-{{ include "docker-remote-api.sh" }}{{/* starts :4243 */}}
 
 {{ if eq INSTANCE_LOGICAL_ID SPEC.SwarmJoinIP }}
 
@@ -36,5 +35,8 @@ sleep 5
   docker swarm join --token {{ SWARM_JOIN_TOKENS.Manager }} {{ SPEC.SwarmJoinIP }}:2377
 
 {{ end }}
+
+{{/* infrakit boot */}}
+{{ include "boot.sh" }}
 
 # Append commands here to run other things...

@@ -7,7 +7,7 @@
         "Plugin" : "manager",
         "Launch" : {
             "os": {
-                "Cmd" : "infrakit-manager --name group  --proxy-for-group group-stateless os --leader-file {{env "INFRAKIT_HOME"}}/leader --store-dir {{env "INFRAKIT_HOME"}}/configs > {{$logDir}}/manager.log 2>&1"
+                "Cmd" : "infrakit-manager --name group  --proxy-for-group group-stateless swarm  > {{$logDir}}/manager.log 2>&1"
             }
         }
     }
