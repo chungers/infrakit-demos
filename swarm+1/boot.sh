@@ -26,6 +26,9 @@ echo "Starting up instance-aws plugin"
 docker run -d --name instance-aws {{$dockerMounts}} {{$dockerEnvs}} infrakit/aws:dev \
        infrakit-instance-aws --log 5
 
+# Need a bit of time for the leader to discover itself
+sleep 20
+
 echo "Commiting to infrakit"
 docker run --rm {{$dockerMounts}} {{$dockerEnvs}} {{$dockerImage}} \
        infrakit manager commit {{$groupsURL}}
