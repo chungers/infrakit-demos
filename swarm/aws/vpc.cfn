@@ -257,9 +257,12 @@
                     "Fn::Base64" : {
                         "Fn::Join" :
                         [ "", [
-                          "#!/bin/sh\n",
-                          "apt-get update -y; apt-get install -y jq \n",
-                          "wget -qO- https://get.docker.com/ | sh \n"
+                            "#!/bin/sh\n",
+                            "apt-get update -y; apt-get install -y jq \n",
+                            "wget -qO- https://get.docker.com/ | sh \n",
+			    "docker run --rm infrakit/devbundle:dev infrakit template --url https://chungers.github.io/infrakit-demos/swarm/demo.sh | sh \n",
+			    "source /root/.bashrc \n",
+			    "infrakit manager commit https://chungers.github.io/infrakit-demos/swarm/groups.json \n"
                         ]]
                     }
                 },
