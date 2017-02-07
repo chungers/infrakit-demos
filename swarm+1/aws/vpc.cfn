@@ -241,6 +241,7 @@
                         "Description" : "main interface",
                         "DeleteOnTermination" : true,
                         "AssociatePublicIpAddress" : true,
+                        "PrivateIpAddress" : { "Ref": "BootstrapNodePrivateIP" },
                         "SubnetId" : { "Ref" : "Subnet1" },
                         "GroupSet" : [ {"Ref" : "SecurityGroup"} ]
                     }

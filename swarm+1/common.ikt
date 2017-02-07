@@ -1,6 +1,6 @@
 {{/* Define globals that are used by all the templates included from this point on. */}}
 
-{{ global "/cluster/name" "infrakit-demos" }}
+{{ global "/cluster/name" "infrakit-demos-swarm+1" }}
 {{ global "/cluster/config/urlRoot" "https://chungers.github.io/infrakit-demos/swarm+1/" }}
 {{ global "/cluster/config/groups.json" (cat (ref "/cluster/config/urlRoot") "groups.json" | nospace) }}
 
