@@ -10,6 +10,8 @@ wget -qO- https://get.docker.com/ | sh
 
 sudo usermod -aG docker {{ ref "/compute/instance/user" }}
 
+{{ end }} {{/* if install */}}
+
 # For Upstart ONLY (pre- Ubuntu 15.04)
 if [ -d "/var/log/upstart" ]; then
     # Upstart
@@ -21,5 +23,3 @@ else
     systemctl daemon-reload
     service docker restart
 fi
-
-{{ end }} {{/* if install */}}

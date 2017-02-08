@@ -60,7 +60,7 @@
             }
         },
 
-        "AWSRegionArch2AMI-Ubuntu14NoDocker": {
+        "AWSRegionArch2AMIUbuntu14NoDocker": {
             "eu-central-1": {
                 "HVM64": "ami-78559817",
                 "HVMG2": "NOT_SUPPORTED"
