@@ -23,3 +23,6 @@ else
     systemctl daemon-reload
     service docker restart
 fi
+
+echo "Wait for Docker to come up"
+sleep 10
