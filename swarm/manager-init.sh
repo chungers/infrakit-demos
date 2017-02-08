@@ -24,7 +24,7 @@ kill -s HUP $(cat /var/run/docker.pid)
 sleep 5
 
 
-{{ if eq INSTANCE_LOGICAL_ID SPEC.SwarmJoinIP }}
+{{ if and (eq INSTANCE_LOGICAL_ID SPEC.SwarmJoinIP) (not SWARM_INITIALIZED) }}
 
   {{/* The first node of the special allocations will initialize the swarm. */}}
   docker swarm init --advertise-addr {{ INSTANCE_LOGICAL_ID }}  # starts :2377
