@@ -1,6 +1,6 @@
 {{ source "common.ikt" }}
 
-# Tested on Ubuntu/trusty
+{{ if ref "/cluster/install/docker" }}
 
 apt-get update -y
 apt-get upgrade -y
@@ -21,3 +21,5 @@ else
     systemctl daemon-reload
     service docker restart
 fi
+
+{{ end }} {{/* if install */}}

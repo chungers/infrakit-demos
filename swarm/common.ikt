@@ -6,6 +6,8 @@
 
 {{ global "/compute/instance/user" "ubuntu" }} {{/* Docker user on installed instances */}}
 
+{{ global "/cluster/install/docker" false }}
+
 {{ global "/infrakit/home" "/root/infrakit" }}
 {{ global "/infrakit/docker/image" "infrakit/devbundle:dev" }}
 {{ global "/infrakit/docker/options/mount" (cat "-v /var/run/docker.sock:/var/run/docker.sock -v" (cat (ref "/infrakit/home") ":/infrakit/" | nospace)) }}

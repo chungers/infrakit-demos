@@ -60,7 +60,7 @@
             }
         },
 
-        "AWSRegionArch2AMI": {
+        "AWSRegionArch2AMI-Ubuntu14NoDocker": {
             "eu-central-1": {
                 "HVM64": "ami-78559817",
                 "HVMG2": "NOT_SUPPORTED"
@@ -75,6 +75,25 @@
             },
             "us-west-2": {
                 "HVM64": "ami-5e63d13e",
+                "HVMG2": "NOT_SUPPORTED"
+            }
+        },
+
+        "AWSRegionArch2AMI": {
+            "eu-central-1": {
+                "HVM64": "ami-5f0dc530",
+                "HVMG2": "NOT_SUPPORTED"
+            },
+            "us-east-1": {
+                "HVM64": "ami-85dd1c93",
+                "HVMG2": "NOT_SUPPORTED"
+            },
+            "us-west-1": {
+                "HVM64": "ami-42570b22",
+                "HVMG2": "NOT_SUPPORTED"
+            },
+            "us-west-2": {
+                "HVM64": "ami-5659dc36",
                 "HVMG2": "NOT_SUPPORTED"
             }
         }
