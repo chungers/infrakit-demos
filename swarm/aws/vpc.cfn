@@ -274,6 +274,10 @@
                     {
                         "Key" : "infrakit.group",
                         "Value" : "swarm-managers"
+                    },
+                    {
+                        "Key" : "infrakit.role",
+                        "Value" : "managers"
                     }
                 ]
             }

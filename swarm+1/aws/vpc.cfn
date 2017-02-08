@@ -269,6 +269,14 @@
                     {
                         "Key" : "Name",
                         "Value" : { "Fn::Join": [ "-", [ { "Ref": "AWS::StackName"}, "Bootstrap" ] ] }
+                    },
+                    {
+                        "Key" : "infrakit.group",
+                        "Value" : "swarm-managers"
+                    },
+                    {
+                        "Key" : "infrakit.role",
+                        "Value" : "managers"
                     }
                 ]
             }
