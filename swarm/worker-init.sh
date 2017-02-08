@@ -21,4 +21,4 @@ kill -s HUP $(cat /var/run/docker.pid)
 
 sleep 5
 
-docker swarm join --token {{  SWARM_JOIN_TOKENS.Worker }} {{ SPEC.SwarmJoinIP }}:2377
+docker swarm join --token {{  SWARM_JOIN_TOKENS.Worker }} {{ SWARM_MANAGER_ADDR }}

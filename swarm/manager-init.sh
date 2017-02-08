@@ -32,7 +32,7 @@ sleep 5
 {{ else }}
 
   {{/* The rest of the nodes will join as followers in the manager group. */}}
-  docker swarm join --token {{ SWARM_JOIN_TOKENS.Manager }} {{ SWARM_MANAGER_IP }}:2377
+  docker swarm join --token {{ SWARM_JOIN_TOKENS.Manager }} {{ SWARM_MANAGER_ADDR }}
 
 {{ end }}
 
