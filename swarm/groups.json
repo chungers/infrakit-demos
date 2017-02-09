@@ -39,13 +39,13 @@ the instances it manages reside.
                     "Properties": {
                         "Attachments" : {
                             "{{index $managerIPs 0}}" : [
-                                { "{{index $managerIPs 0}}" : "ebs" }
+                                { "ID":"{{index $managerIPs 0}}" : "Type":"ebs" }
                             ],
                             "{{index $managerIPs 1}}" : [
-                                { "{{index $managerIPs 1}}" : "ebs" }
+                                { "ID":"{{index $managerIPs 1}}" : "Type":"ebs" }
                             ],
                             "{{index $managerIPs 2}}" : [
-                                { "{{index $managerIPs 2}}" : "ebs" }
+                                { "ID":"{{index $managerIPs 2}}" : "Type":"ebs" }
                             ]
                         },
                         "InitScriptTemplateURL": "{{ $managerInit }}",
