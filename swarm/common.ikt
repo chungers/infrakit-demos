@@ -3,10 +3,10 @@
 {{ global "/cluster/name" "infrakit-demos" }}
 {{ global "/cluster/config/urlRoot" "https://chungers.github.io/infrakit-demos/swarm/" }}
 {{ global "/cluster/config/groups.json" (cat (ref "/cluster/config/urlRoot") "groups.json" | nospace) }}
+{{ global "/cluster/swarm/join/ip" "172.31.16.101" }}
+{{ global "/cluster/swarm/manager/ips" (tuple "172.31.16.101" "172.31.16.102" "172.31.16.103") }}
 
-{{ global "/compute/instance/user" "ubuntu" }} {{/* Docker user on installed instances */}}
-
-{{ global "/cluster/install/docker" false }}
+{{ global "/local/install/docker" false }}
 
 {{ global "/infrakit/home" "/root/infrakit" }}
 {{ global "/infrakit/docker/image" "infrakit/devbundle:0.3.1" }}

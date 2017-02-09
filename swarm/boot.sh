@@ -6,19 +6,41 @@ set -o xtrace
 
 {{ source "common.ikt" }}
 
-{{/* Set up volumes */}}
-{{ include "setup-volume.sh" }}
 
-{{/* Install Docker */}}
-{{ if ref "/cluster/install/docker" }} {{ include "install-docker.sh" }} {{ end }}
+##### Set up volumes ############################################################
 
-{{/* Set up infrakit */}}
-{{ include "infrakit.sh" }}
+{{ if ref "/local/instance/volume/attach" }}{{ include "setup-volume.sh" }} {{ end }}
+
+##### Set up Docker #############################################################
+
+{{/* Install Docker */}}{{ if ref "/local/install/docker" }} {{ include "install-docker.sh" }} {{ end }}
+
+{{/* Label the Docker Engine */}}
+{{ $dockerLabels := ref "/local/docker/engine/labels" }}
+mkdir -p /etc/docker
+cat << EOF > /etc/docker/daemon.json
+{
+  "labels": {{ $dockerLabels | to_json }}
+}
+EOF
+kill -s HUP $(cat /var/run/docker.pid)  {{/* Reload the engine labels */}}
+sleep 5
 
 
-{{ if not (ref "/cluster/swarm/init") }}
-docker swarm init
+##### Set up Docker Swarm Mode  ##################################################
+
+{{ if not (ref "/cluster/swarm/initialized") }}
+  docker swarm init --advertise-addr {{ ref "/cluster/swarm/join/ip" }}  # starts :2377
+{{ else }}
+  docker swarm join --token {{ ref "/local/docker/swarm/join/token" }} {{ ref "/local/docker/swarm/join/addr" }}
 {{ end }}
+
+
+##### Infrakit Services  #########################################################
+
+{{ if (ref "/local/infrakit/install") }}
+
+{{ include "infrakit.sh" }}
 
 {{ $dockerImage := ref "/infrakit/docker/image" }}
 {{ $dockerMounts := ref "/infrakit/docker/options/mount" }}
@@ -45,3 +67,5 @@ sleep 10
 
 echo "Commiting to infrakit"
 docker run --rm {{$dockerMounts}} {{$dockerEnvs}} {{$dockerImage}} infrakit manager commit {{$groupsURL}}
+
+{{ end }}{{/* if running infrakit */}}

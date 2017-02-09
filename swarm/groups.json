@@ -13,9 +13,8 @@ the instances it manages reside.
 {{ source "common.ikt" }} {{/* a common template included here to define global variables */}}
 
 {{/* Local variables */}}
-
-{{ $swarmLeaderIP := "172.31.16.101" }}
-{{ $managerIPs := tuple $swarmLeaderIP "172.31.16.102" "172.31.16.103" }}
+{{ $swarmLeaderIP := ref "/cluster/swarm/join/ip" }}
+{{ $managerIPs := ref "/cluster/swarm/manager/ips" }}
 
 {{ $workerSize := 3 }}
 {{ $dockerEngine := "unix:///var/run/docker.sock" }} {{/* for this flavor to connect to */}}

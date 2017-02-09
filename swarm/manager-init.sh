@@ -4,31 +4,18 @@ set -o errexit
 set -o nounset
 set -o xtrace
 
-mkdir -p /etc/docker
-cat << EOF > /etc/docker/daemon.json
-{
-  "labels": {{ INFRAKIT_LABELS | to_json }}
-}
-EOF
+{{/* Before we call the common boot sequence, set a few variables */}}
 
-{{/* Reload the engine labels */}}
-kill -s HUP $(cat /var/run/docker.pid)
-sleep 5
+{{ global "/cluster/swarm/initialized" SWARM_INITIALIZED }}
+{{ global "/cluster/swarm/join/ip" INSTANCE_LOGICAL_ID }}
 
+{{ global "/local/instance/volume/attach" true }}
+{{ global "/local/docker/engine/labels" INFRAKIT_LABELS }}
+{{ global "/local/docker/swarm/join/addr", SWARM_MANAGER_ADDR }}
+{{ global "/local/docker/swarm/join/token", SWARM_JOIN_TOKENS.Manager }}
 
-{{ if and (eq INSTANCE_LOGICAL_ID SPEC.SwarmJoinIP) (not SWARM_INITIALIZED) }}
+{{ global "/local/infrakit/install", true }}
 
-  {{/* The first node of the special allocations will initialize the swarm. */}}
-  docker swarm init --advertise-addr {{ INSTANCE_LOGICAL_ID }}  # starts :2377
-
-{{ else }}
-
-  {{/* The rest of the nodes will join as followers in the manager group. */}}
-  docker swarm join --token {{ SWARM_JOIN_TOKENS.Manager }} {{ SWARM_MANAGER_ADDR }}
-
-{{ end }}
-
-{{ global "/cluster/swarm/init" true }}
 {{ include "boot.sh" }}
 
-# Append commands here to run other things...
+# Append commands here to run other things that makes sense for managers
