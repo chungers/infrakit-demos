@@ -17,7 +17,6 @@ set -o xtrace
 
 {{/* Label the Docker Engine */}}
 {{ $dockerLabels := ref "/local/docker/engine/labels" }}
-{{ if gt (len $dockerLabels) 0 }}
 mkdir -p /etc/docker
 cat << EOF > /etc/docker/daemon.json
 {
@@ -26,7 +25,6 @@ cat << EOF > /etc/docker/daemon.json
 EOF
 kill -s HUP $(cat /var/run/docker.pid)  {{/* Reload the engine labels */}}
 sleep 5
-{{ end }}
 
 ##### Set up Docker Swarm Mode  ##################################################
 
