@@ -1,9 +1,24 @@
 #!/bin/bash
 
+set -o errexit
+set -o nounset
+set -o xtrace
+
 {{ source "common.ikt" }}
 
-# Set up infrakit.  This assumes Docker has been installed
+{{/* Set up volumes */}}
+{{ include "setup-volume.sh" }}
+
+{{/* Install Docker */}}
+{{ if ref "/cluster/install/docker" }} {{ include "install-docker.sh" }} {{ end }}
+
+{{/* Set up infrakit */}}
 {{ include "infrakit.sh" }}
+
+
+{{ if not ref "/cluster/swarm/init" }}
+docker swarm init
+{{ end }}
 
 {{ $dockerImage := ref "/infrakit/docker/image" }}
 {{ $dockerMounts := ref "/infrakit/docker/options/mount" }}
@@ -25,9 +40,8 @@ docker run -d --name infrakit {{$dockerMounts}} {{$dockerEnvs}} {{$dockerImage}}
 echo "Starting up instance-aws plugin"
 docker run -d --name instance-plugin {{$dockerMounts}} {{$dockerEnvs}} {{$instanceImage}} {{$instanceCmd}}
 
-
 # Need a bit of time for the leader to discover itself
-sleep 20
+sleep 10
 
 echo "Commiting to infrakit"
 docker run --rm {{$dockerMounts}} {{$dockerEnvs}} {{$dockerImage}} infrakit manager commit {{$groupsURL}}

@@ -20,6 +20,11 @@
             "Type" : "String",
             "Description" : "Private IP of the bootstrap node",
             "Default" : "172.31.16.101"
+        },
+        "BootScriptURL" : {
+            "Type" : "String",
+            "Description" : "URL of the bootscript",
+            "Default" : "https://chungers.github.io/infrakit-demos/swarm/boot.sh"
         }
     },
 
@@ -247,6 +252,72 @@
             }
         },
 
+        {
+            "Type":"AWS::EC2::Volume",
+            "Properties" : {
+                "AvailabilityZone" :  { "Fn::GetAtt" : [ "Subnet1", "AvailabilityZone" ] },
+                "Size" : 4,
+                "Tags" : [
+                    {
+                        "Key" : "Name",
+                        "Value" : { "Fn::Join": [ "-", [ { "Ref": "AWS::StackName"}, "EBS" ] ] }
+                    },
+                    {
+                        "Key" : "infrakit.cluster",
+                        "Value" : {"Ref": "AWS::StackName"},
+                    },
+                    {
+                        "Key" : "docker-infrakit-volume",
+                        "Value" : "172.31.16.101"
+                    }
+                ]
+            }
+        },
+
+        {
+            "Type":"AWS::EC2::Volume",
+            "Properties" : {
+                "AvailabilityZone" :  { "Fn::GetAtt" : [ "Subnet1", "AvailabilityZone" ] },
+                "Size" : 4,
+                "Tags" : [
+                    {
+                        "Key" : "Name",
+                        "Value" : { "Fn::Join": [ "-", [ { "Ref": "AWS::StackName"}, "EBS" ] ] }
+                    },
+                    {
+                        "Key" : "infrakit.cluster",
+                        "Value" : {"Ref": "AWS::StackName"},
+                    },
+                    {
+                        "Key" : "docker-infrakit-volume",
+                        "Value" : "172.31.16.102"
+                    }
+                ]
+            }
+        },
+
+        {
+            "Type":"AWS::EC2::Volume",
+            "Properties" : {
+                "AvailabilityZone" :  { "Fn::GetAtt" : [ "Subnet1", "AvailabilityZone" ] },
+                "Size" : 4,
+                "Tags" : [
+                    {
+                        "Key" : "Name",
+                        "Value" : { "Fn::Join": [ "-", [ { "Ref": "AWS::StackName"}, "EBS" ] ] }
+                    },
+                    {
+                        "Key" : "infrakit.cluster",
+                        "Value" : {"Ref": "AWS::StackName"},
+                    },
+                    {
+                        "Key" : "docker-infrakit-volume",
+                        "Value" : "172.31.16.103"
+                    }
+                ]
+            }
+        },
+
         "BootstrapInstance" : {
             "DependsOn": "Subnet1",
             "Type" : "AWS::EC2::Instance",
@@ -281,7 +352,7 @@
                             "apt-get update -y; apt-get install -y jq \n",
                             "wget -qO- https://get.docker.com/ | sh \n",
                             "docker swarm init --advertise-addr ", {"Ref": "BootstrapNodePrivateIP"}, "\n",
-                            "docker run --rm infrakit/devbundle:dev infrakit template --url https://chungers.github.io/infrakit-demos/swarm/boot.sh | sh \n"
+                            "docker run --rm infrakit/devbundle:dev infrakit template --url ",{"Ref":"BootScriptURL"}," | sh \n"
                         ]]
                     }
                 },
