@@ -44,6 +44,7 @@
     },
 
     "Mappings": {
+
         "VpcCidrs" : {
             "vpc" : {
                 "cidr": "172.31.0.0/16"
@@ -252,7 +253,7 @@
             }
         },
 
-        {
+        "Volume1" : {
             "Type":"AWS::EC2::Volume",
             "Properties" : {
                 "AvailabilityZone" :  { "Fn::GetAtt" : [ "Subnet1", "AvailabilityZone" ] },
@@ -264,7 +265,7 @@
                     },
                     {
                         "Key" : "infrakit.cluster",
-                        "Value" : {"Ref": "AWS::StackName"},
+                        "Value" : {"Ref": "AWS::StackName"}
                     },
                     {
                         "Key" : "docker-infrakit-volume",
@@ -274,7 +275,7 @@
             }
         },
 
-        {
+        "Volume2" : {
             "Type":"AWS::EC2::Volume",
             "Properties" : {
                 "AvailabilityZone" :  { "Fn::GetAtt" : [ "Subnet1", "AvailabilityZone" ] },
@@ -286,7 +287,7 @@
                     },
                     {
                         "Key" : "infrakit.cluster",
-                        "Value" : {"Ref": "AWS::StackName"},
+                        "Value" : {"Ref": "AWS::StackName"}
                     },
                     {
                         "Key" : "docker-infrakit-volume",
@@ -296,7 +297,7 @@
             }
         },
 
-        {
+        "Volume3" : {
             "Type":"AWS::EC2::Volume",
             "Properties" : {
                 "AvailabilityZone" :  { "Fn::GetAtt" : [ "Subnet1", "AvailabilityZone" ] },
@@ -308,13 +309,23 @@
                     },
                     {
                         "Key" : "infrakit.cluster",
-                        "Value" : {"Ref": "AWS::StackName"},
+                        "Value" : {"Ref": "AWS::StackName"}
                     },
                     {
                         "Key" : "docker-infrakit-volume",
                         "Value" : "172.31.16.103"
                     }
                 ]
+            }
+        },
+
+        "BootstrapInstanceVolumeAttachment" : {
+            "DependsOn": "Boots",
+            "Type":"AWS::EC2::VolumeAttachment",
+            "Properties" : {
+                "Device" : "/dev/xvdf",
+                "InstanceId" : {"Ref": "BootstrapInstance"},
+                "VolumeId" : {"Ref": "Volume1" }
             }
         },
 
