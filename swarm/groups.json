@@ -37,6 +37,17 @@ the instances it manages reside.
                 "Flavor": {
                     "Plugin": "flavor-swarm/manager",
                     "Properties": {
+                        "Attachments" : {
+                            "{{index $managerIPs 0}}" : [
+                                { "{{index $managerIPs 0}}" : "ebs" }
+                            ],
+                            "{{index $managerIPs 1}}" : [
+                                { "{{index $managerIPs 1}}" : "ebs" }
+                            ],
+                            "{{index $managerIPs 2}}" : [
+                                { "{{index $managerIPs 2}}" : "ebs" }
+                            ]
+                        },
                         "InitScriptTemplateURL": "{{ $managerInit }}",
                         "SwarmJoinIP": "{{ $swarmLeaderIP }}",
                         "Docker" : {
