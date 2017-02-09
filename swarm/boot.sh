@@ -16,7 +16,7 @@ set -o xtrace
 {{ include "infrakit.sh" }}
 
 
-{{ if not ref "/cluster/swarm/init" }}
+{{ if not (ref "/cluster/swarm/init") }}
 docker swarm init
 {{ end }}
 
