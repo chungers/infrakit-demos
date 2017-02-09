@@ -1,4 +1,4 @@
-{{/* Define globals that are used by all the templates included from this point on. */}}
+{{/* Global variables */}}
 
 {{ global "/cluster/name" "infrakit-demos" }}
 {{ global "/cluster/config/urlRoot" "https://chungers.github.io/infrakit-demos/swarm/" }}
