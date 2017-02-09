@@ -17,7 +17,7 @@ fi
 
 stopped=0
 if [ -d "/var/lib/docker" ]; then
-    systemctl stop docker
+    service stop docker
     rm -rf /var/lib/docker
     stopped=1
 fi
@@ -30,5 +30,5 @@ mount -a
 
 if [ "$stopped" -eq "1" ]; then
     echo "Starting Docker"
-    systemctl start docker
+    service start docker
 fi
