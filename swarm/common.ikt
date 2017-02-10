@@ -15,4 +15,4 @@
 
 {{ global "/infrakit/instance/docker/image" "infrakit/aws:0.3.0" }}
 {{ global "/infrakit/instance/docker/cmd" "infrakit-instance-aws --log 5" }}
-{{ global "/local/docker/engine/labels" (from_json "{}") }}
+{{ def "/local/docker/engine/labels" (from_json "{}") }}
