@@ -9,10 +9,10 @@ set -o xtrace
 {{ global "/cluster/swarm/initialized" SWARM_INITIALIZED }}
 
 {{ global "/local/docker/engine/labels" INFRAKIT_LABELS }}
-{{ global "/local/docker/swarm/join/addr", SWARM_MANAGER_ADDR }}
-{{ global "/local/docker/swarm/join/token", SWARM_JOIN_TOKENS.Worker }}
+{{ global "/local/docker/swarm/join/addr" SWARM_MANAGER_ADDR }}
+{{ global "/local/docker/swarm/join/token" SWARM_JOIN_TOKENS.Worker }}
 
-{{ global "/local/infrakit/role/worker", true }}
+{{ global "/local/infrakit/role/worker" true }}
 
 {{ include "boot.sh" }}
 
