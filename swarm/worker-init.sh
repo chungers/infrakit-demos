@@ -11,7 +11,8 @@ set -o xtrace
 {{ global "/local/docker/engine/labels" INFRAKIT_LABELS }}
 {{ global "/local/docker/swarm/join/addr", SWARM_MANAGER_ADDR }}
 {{ global "/local/docker/swarm/join/token", SWARM_JOIN_TOKENS.Worker }}
-{{ global "/local/infrakit/role", "worker" }}
+
+{{ global "/local/infrakit/role/worker", true }}
 
 {{ include "boot.sh" }}
 

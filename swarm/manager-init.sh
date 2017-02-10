@@ -14,7 +14,7 @@ set -o xtrace
 {{ global "/local/docker/swarm/join/addr", SWARM_MANAGER_ADDR }}
 {{ global "/local/docker/swarm/join/token", SWARM_JOIN_TOKENS.Manager }}
 
-{{ global "/local/infrakit/install", true }}
+{{ global "/local/infrakit/role/manager", true }}
 
 {{ include "boot.sh" }}
 

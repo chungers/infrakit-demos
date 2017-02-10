@@ -37,7 +37,7 @@ sleep 5
 
 ##### Infrakit Services  #########################################################
 
-{{ if not (eq (ref "/local/infrakit/role") "worker") }}
+{{ if not (ref "/local/infrakit/role/worker") }}
 
 {{ include "infrakit.sh" }}
 
