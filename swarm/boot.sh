@@ -8,8 +8,8 @@ set -o xtrace
 
 
 ##### Set up volumes ############################################################
-
-{{ if ref "/local/instance/volume/attach" }}{{ include "setup-volume.sh" }} {{ end }}
+# Only for managers
+{{ if not (ref "/local/infrakit/role/worker") }} {{ include "setup-volume.sh" }} {{ end }}
 
 ##### Set up Docker #############################################################
 
