@@ -31,7 +31,7 @@ sleep 5
 ##### Set up Docker Swarm Mode  ##################################################
 
 {{ if not (ref "/cluster/swarm/initialized") }}
-  docker swarm init --advertise-addr {{ ref "/cluster/swarm/join/ip" }}  # starts :2377
+docker swarm init --advertise-addr {{ ref "/cluster/swarm/join/ip" }}  # starts :2377
 {{ end }}
 
 
@@ -66,8 +66,11 @@ docker run -d --restart always --name instance-plugin \
 
 sleep 5
 
+
+{{ if ref "/cluster/swarm/initialized" }}
 echo "Joining swarm"
 docker swarm join --token {{ ref "/local/docker/swarm/join/token" }} {{ ref "/local/docker/swarm/join/addr" }}
+{{ end }}
 
 # Need a bit of time for the leader to discover itself
 sleep 10
