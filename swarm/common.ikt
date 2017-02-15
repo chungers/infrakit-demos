@@ -17,4 +17,4 @@
 {{ global "/infrakit/instance/docker/cmd" "infrakit-instance-aws --log 5" }}
 
 
-{{ if empty (ref "/local/docker/engine/labels") }}{{ global "/local/docker/engine/labels" (from_json "{\"labels\":[]}") }}{{end}}
+{{ if empty (ref "/local/docker/engine/labels") }}{{ global "/local/docker/engine/labels" (from_json "[]") }}{{end}}
