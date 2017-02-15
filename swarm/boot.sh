@@ -63,15 +63,6 @@ echo "Starting up instance-aws plugin"
 docker run -d --restart always --name instance-plugin \
        {{$dockerMounts}} {{$dockerEnvs}} {{$instanceImage}} {{$instanceCmd}}
 
-
-sleep 5
-
-
-{{ if ref "/cluster/swarm/initialized" }}
-echo "Joining swarm"
-docker swarm join --token {{ ref "/local/docker/swarm/join/token" }} {{ ref "/local/docker/swarm/join/addr" }}
-{{ end }}
-
 # Need a bit of time for the leader to discover itself
 sleep 10
 
@@ -79,3 +70,11 @@ echo "Commiting to infrakit"
 docker run --rm {{$dockerMounts}} {{$dockerEnvs}} {{$dockerImage}} infrakit manager commit {{$groupsURL}}
 
 {{ end }}{{/* if running infrakit */}}
+
+
+sleep 5
+
+{{ if ref "/cluster/swarm/initialized" }}
+echo "Joining swarm"
+docker swarm join --token {{ ref "/local/docker/swarm/join/token" }} {{ ref "/local/docker/swarm/join/addr" }}
+{{ end }}
