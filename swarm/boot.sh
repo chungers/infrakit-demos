@@ -66,8 +66,8 @@ docker run -d --restart always --name instance-plugin \
 # Need a bit of time for the leader to discover itself
 sleep 10
 
-echo "Commiting to infrakit"
-docker run --rm {{$dockerMounts}} {{$dockerEnvs}} {{$dockerImage}} infrakit manager commit {{$groupsURL}}
+# Try to commit - this is idempotent but don't error out and stop the cloud init script!
+echo "Commiting to infrakit $(docker run --rm {{$dockerMounts}} {{$dockerEnvs}} {{$dockerImage}} infrakit manager commit {{$groupsURL}})"
 
 {{ end }}{{/* if running infrakit */}}
 
