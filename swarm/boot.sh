@@ -32,8 +32,6 @@ sleep 5
 
 {{ if not (ref "/cluster/swarm/initialized") }}
   docker swarm init --advertise-addr {{ ref "/cluster/swarm/join/ip" }}  # starts :2377
-{{ else }}
-  docker swarm join --token {{ ref "/local/docker/swarm/join/token" }} {{ ref "/local/docker/swarm/join/addr" }}
 {{ end }}
 
 
@@ -64,6 +62,12 @@ docker run -d --restart always --name infrakit \
 echo "Starting up instance-aws plugin"
 docker run -d --restart always --name instance-plugin \
        {{$dockerMounts}} {{$dockerEnvs}} {{$instanceImage}} {{$instanceCmd}}
+
+
+sleep 5
+
+echo "Joining swarm"
+docker swarm join --token {{ ref "/local/docker/swarm/join/token" }} {{ ref "/local/docker/swarm/join/addr" }}
 
 # Need a bit of time for the leader to discover itself
 sleep 10
