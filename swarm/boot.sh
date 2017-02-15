@@ -54,14 +54,16 @@ sleep 5
 
 echo "Starting up infrakit"
 
-docker run -d --name infrakit {{$dockerMounts}} {{$dockerEnvs}} {{$dockerImage}} \
+docker run -d --restart always --name infrakit \
+       {{$dockerMounts}} {{$dockerEnvs}} {{$dockerImage}} \
        infrakit plugin start --wait --config-url {{$pluginsURL}} --exec os --log 5 \
        manager \
        group-stateless \
        flavor-swarm
 
 echo "Starting up instance-aws plugin"
-docker run -d --name instance-plugin {{$dockerMounts}} {{$dockerEnvs}} {{$instanceImage}} {{$instanceCmd}}
+docker run -d --restart always --name instance-plugin \
+       {{$dockerMounts}} {{$dockerEnvs}} {{$instanceImage}} {{$instanceCmd}}
 
 # Need a bit of time for the leader to discover itself
 sleep 10
