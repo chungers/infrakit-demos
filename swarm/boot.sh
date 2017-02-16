@@ -38,7 +38,7 @@ docker swarm init --advertise-addr {{ ref "/cluster/swarm/join/ip" }}  # starts 
 ##### Infrakit Services  #########################################################
 
 {{ if not (ref "/local/infrakit/role/worker") }}
-{{ include "infrakit.sh" }}
+{{ include "infrakit-2.sh" }}
 {{ end }}{{/* if running infrakit */}}
 
 {{ if ref "/cluster/swarm/initialized" }}
