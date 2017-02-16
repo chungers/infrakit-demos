@@ -23,7 +23,7 @@ alias infrakit='docker run --rm {{$dockerMounts}} {{$dockerEnvs}} {{$dockerImage
 {{ $instanceCmd := ref "/infrakit/instance/docker/cmd" }}
 
 echo "Starting up infrakit"
-docker run -d --restart always --name group-stateless \
+docker run -d --restart always --name manager \
        {{$dockerMounts}} {{$dockerEnvs}} {{$dockerImage}} \
        infrakit-manager --name group  --proxy-for-group group-stateless swarm
 
